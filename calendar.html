@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Agenda</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.css' />
+
+	<style>
+			.fc-ltr .fc-basic-view .fc-day-top .fc-day-number{
+				float: none;
+				font-size: 38px;
+			}
+			.fc-row .fc-content-skeleton td, .fc-row .fc-helper-skeleton td{
+				text-align: center;
+			}
+			.navigation-detail{
+				color:red !important;
+				text-align: right;
+				font-size: 22px;
+				padding-right: 5px;
+			}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.1.0/fullcalendar.min.js'></script>
+</head>
+<body>
+
+	<div id="calendar"></div>
+
+	<script>
+		 ajax_calendar();
+		 
+		 function ajax_calendar(){
+			$.ajax({
+			   url: "https://www.example.com/json",
+			   success: function(result){
+				  $('#calendar').fullCalendar({
+					 events : result,
+					 eventColor : 'green',
+					 eventTextColor : 'white',
+					 eventRender: function(eventObj, $el) {
+						if(eventObj.status == 'batal'){
+						   $el.css('text-decoration-line', 'line-through');
+						}
+
+
+						var tanggal = eventObj._start._i;
+							tanggal = tanggal.substring(0, 10);
+							tanggal = replace_all(tanggal, '-', '');
+						$el.addClass('tanggal-full tanggal-' + tanggal);
+
+					 },
+
+					 eventAfterAllRender: function(){
+						$('.fc-day-top').each(function(index, element) {
+							var tanggal = $(this).data('date');
+								tanggal = replace_all(tanggal, '-', '');
+							var navigation = '<div class="navigation-detail" id="tanggal-'+tanggal+'"><span class="fa fa-circle fa-1x" data-id="tanggal-'+tanggal+'"></span></div>';
+							
+							$("a.tanggal-" + tanggal).hide();
+
+							if($(this).parent().parent().next().children().children().eq(0).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(0).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(1).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(1).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(2).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(2).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(3).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(3).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(4).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(4).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(5).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(5).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+
+							if($(this).parent().parent().next().children().children().eq(6).hasClass('fc-event-container') && $(this).parent().parent().next().children().children().eq(6).children().hasClass('tanggal-'+tanggal)){
+								$(this).append(navigation);
+							}
+						});
+					 },
+					 selectable : true,
+					 locale: 'id',
+					 height   : 800,
+					 editable : false,
+					 header: {
+						left   : 'month,agendaWeek,agendaDay',
+						center : 'title',
+						right  : 'today prev,next',
+					 },
+				  });
+			   }
+			});
+		 }
+		
+		$(document).on("click", ".navigation-detail .fa", function() {
+			var tanggal = $(this).data('id');
+
+			$("a." + tanggal).slideToggle("slow");
+
+			if($(this).hasClass('fa-circle-o')){
+				$(this).addClass('fa-circle');
+				$(this).removeClass('fa-circle-o');
+			} else {
+				$(this).removeClass('fa-circle');
+				$(this).addClass('fa-circle-o');
+			}
+		});
+
+		function replace_all(string, search, replace) {
+			return string.split(search).join(replace);
+		}
+	</script>
+</body>
+</html>
